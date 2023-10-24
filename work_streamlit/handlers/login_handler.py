@@ -11,8 +11,8 @@ class LoginCheckHandler:
             st.stop()
 
 
-CONTENTS_FOR_LOGEDIN = """
-### :green[Logged in successfully]
+LOGEDIN_CONTENTS = """
+### :green[Logged in successfully]🎉
 
 Welcome to the Streamlit sample site.  
 Please explore the demos available in the sidebar. 
@@ -22,7 +22,7 @@ Please explore the demos available in the sidebar.
 class LoginHandler:
     @classmethod
     def __display_logedin_contents(cls) -> None:
-        st.markdown(CONTENTS_FOR_LOGEDIN)
+        st.markdown(LOGEDIN_CONTENTS)
 
     # @staticmethod
     # def __on_click_login() -> None:
