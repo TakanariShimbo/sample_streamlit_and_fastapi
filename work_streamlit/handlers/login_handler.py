@@ -44,10 +44,7 @@ class LoginHandler:
             return
 
         # Backend Eealy Return
-        if not cls.__send_inputs_to_backend(
-            user_name=inputs_dict["User Name"],
-            user_password=inputs_dict["Password"],
-        ):
+        if not cls.__send_inputs_to_backend(**inputs_dict):
             SessionStateHandler.set_login_message(f"Incorrect 'User Name' or 'Password'")
             return
 
@@ -83,9 +80,10 @@ class LoginHandler:
     def __display_not_loggedin_contents(cls) -> None:
         with st.form("login_form"):
             inputs_dict = {
-                "User Name": st.text_input("User Name", type="default"),
-                "Password": st.text_input("Password", type="password"),
+                "user_name": st.text_input("User Name", type="default"),
+                "user_password": st.text_input("Password", type="password"),
             }
+            
             login_message = SessionStateHandler.get_login_message()
             if login_message:
                 st.error(login_message)
