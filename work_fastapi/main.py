@@ -1,20 +1,7 @@
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
 
+from schema import LoginUser
 
-"""
-Base
-"""
-class LoginUser(BaseModel):
-    user_name: str
-    user_password: str
-
-class CreateUser(BaseModel):
-    user_name: str
-    user_password: str
-
-class User(CreateUser):
-    user_id: int
 
 
 """
@@ -31,7 +18,6 @@ async def root():
 @app.post("/login-user/")
 async def login_user(login_user: LoginUser):
     registered_users = [
-        LoginUser(user_name="ikezus", user_password="ikezus"),
         LoginUser(user_name="shinbot", user_password="shinbot"),
     ]
 
