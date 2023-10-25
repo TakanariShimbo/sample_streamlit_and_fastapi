@@ -6,6 +6,7 @@ import requests
 import streamlit as st
 
 from handlers.session_state_handler import SessionStateHandler
+from base import BACKEND_URL
 
 
 class LoginCheckHandler:
@@ -16,12 +17,9 @@ class LoginCheckHandler:
             st.stop()
 
 
-BACKEND_URL = "http://localhost:8000"
-
-
 class LoginHandler:
-    @classmethod
-    def __display_loggedin_contents(cls) -> None:
+    @staticmethod
+    def __display_loggedin_contents() -> None:
         contents = dedent(
             """
             ### :green[Logged in successfully]🎉
@@ -39,12 +37,13 @@ class LoginHandler:
 
     @classmethod
     def __on_click_login_process(cls, inputs_dict: Dict[str, Any]) -> None:
+        # Frontend Eealy Return
         missing_labels = [label for label, value in inputs_dict.items() if not value]
-
         if missing_labels:
             SessionStateHandler.set_login_message(f"Please input {missing_labels[0]}")
             return
 
+        # Backend Eealy Return
         if not cls.__send_inputs_to_backend(
             user_name=inputs_dict["User Name"],
             user_password=inputs_dict["Password"],
