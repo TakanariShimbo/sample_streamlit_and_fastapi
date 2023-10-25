@@ -3,9 +3,9 @@ import streamlit as st
 
 class SessionStateHandler:
     @staticmethod
-    def get_logedin() -> bool:
-        return st.session_state.get("logedin", False)
+    def get_loggedin() -> bool:
+        return st.session_state.get("loggedin", False)
     
     @staticmethod
-    def set_logedin() -> None:
-        setattr(st.session_state, "logedin", True)
+    def set_loggedin() -> None:
+        setattr(st.session_state, "loggedin", True)
