@@ -10,7 +10,7 @@ TitleHandler.set_title(icon="📄", title="Markdown")
 
 # check login
 login_handler = LoginHandler()
-if not login_handler.check_is_loggedin():
+if not login_handler.check_is_login():
     st.error("Please login at 🏠 Home")
     st.stop()
 

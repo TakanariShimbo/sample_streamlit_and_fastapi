@@ -12,6 +12,9 @@ TitleHandler.set_title(icon="🏠", title="Home")
 
 
 # Contents
+login_handler = LoginHandler()
+
+
 def display_login_success_content():
     def on_click_logout() -> None:
         login_handler.logout()
@@ -29,28 +32,30 @@ def display_login_success_content():
 
 
 def display_login_form():
-    login_form =  st.form("login_form", clear_on_submit=False)
-    inputs_dict = {
-        "user_name": login_form.text_input("User Name", type="default", key="User Name Input in Login Form"),
-        "user_password": login_form.text_input("Password", type="password", key="Password Input in Login Form"),
-    }
+    with st.form("login_form", clear_on_submit=False):
+        inputs_dict = {
+            "user_name": st.text_input("User Name", type="default", key="User Name Input in Login Form"),
+            "user_password": st.text_input("Password", type="password", key="Password Input in Login Form"),
+        }
     
-    login_message = SessionStateHandler.get_login_message()
-    if login_message:
-        login_form.error(login_message)
+        login_message = SessionStateHandler.get_login_message()
+        if login_message:
+            st.error(login_message)
 
-    if login_form.form_submit_button("Login", on_click=login_handler.on_click_login_start, disabled=SessionStateHandler.get_login_button_submitting()):
-        with st.spinner():
-            is_success = login_handler.on_click_login_process(inputs_dict)
-        login_handler.on_click_login_finish()    
-        if is_success:
-            display_login_success_content()
-        else:
-            st.rerun()
+        if st.form_submit_button("Login", on_click=login_handler.on_click_login_start, disabled=SessionStateHandler.get_login_button_state()):
+            with st.spinner():
+                is_login_success = login_handler.on_click_login_process(inputs_dict)
+            login_handler.on_click_login_finish()    
+            if is_login_success:
+                # go to display login success content        
+                pass
+            else:    
+                st.rerun()
+    if SessionStateHandler.get_login_state():
+        display_login_success_content()
 
 
-login_handler = LoginHandler()
-if not login_handler.check_is_loggedin():
+if not login_handler.check_is_login():
     display_login_form()
 
 else:
