@@ -11,7 +11,6 @@ from handlers.backend_response_handler import BackendResponseHandler
 from base import BACKEND_URL
 
 
-@st.cache_data(experimental_allow_widgets=True)
 def get_manager() -> stx.CookieManager:
     return stx.CookieManager()
 
@@ -20,9 +19,11 @@ class LoginHandler:
         self.__cookie_manager = get_manager()
         self.__cookie_handler = CookieHandler(self.__cookie_manager)
 
-    def check_is_login(self) -> bool:
+    def check_is_login(self, is_verify_token=True) -> bool:
         if SessionStateHandler.get_login_state():
             return True
+        elif not is_verify_token:
+            return False
         elif self.__cookie_handler.verify_token():
             SessionStateHandler.set_login_state(is_login=True)
             return True

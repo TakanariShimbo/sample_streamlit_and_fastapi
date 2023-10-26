@@ -8,7 +8,7 @@ from handlers.login_handler import LoginHandler
 
 
 # Set Titles
-TitleHandler.set_title(icon="🏠", title="Home")
+TitleHandler.set_title(icon="🏠", title="Login")
 
 
 # Contents
@@ -16,9 +16,6 @@ login_handler = LoginHandler()
 
 
 def display_login_success_content():
-    def on_click_logout() -> None:
-        login_handler.logout()
-
     contents = dedent(
         """
         ### :green[Logged in successfully]🎉
@@ -28,7 +25,6 @@ def display_login_success_content():
         """
     )
     st.markdown(contents)
-    st.button("Logout", key="Logout Button", on_click=on_click_logout)
 
 
 def display_login_form():
