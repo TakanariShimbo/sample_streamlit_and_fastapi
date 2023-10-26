@@ -15,7 +15,7 @@ async def root():
     return {"contents" : "Hello world"}
 
 
-@app.post("/login-user/")
+@app.post("/login-user/", response_model=LoginUser)
 async def login_user(login_user: LoginUser):
     registered_users = [
         LoginUser(user_name="shinbot", user_password="shinbot"),

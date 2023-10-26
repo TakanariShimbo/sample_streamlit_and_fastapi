@@ -1,7 +1,7 @@
 import streamlit as st
 
 from handlers.title_handler import TitleHandler
-from handlers.login_handler import LoginCheckHandler
+from handlers.login_handler import LoginHandler
 
 
 # Set Titles
@@ -9,7 +9,11 @@ TitleHandler.set_title(icon="📄", title="Markdown")
 
 
 # check login
-LoginCheckHandler.early_return_if_not_logined()
+login_handler = LoginHandler()
+if not login_handler.check_is_loggedin():
+    st.error("Please login at 🏠 Home")
+    st.stop()
+
 
 
 # Contents

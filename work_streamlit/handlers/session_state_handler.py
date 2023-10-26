@@ -9,8 +9,8 @@ class SessionStateHandler:
         return st.session_state.get("loggedin", False)
     
     @staticmethod
-    def set_loggedin() -> None:
-        setattr(st.session_state, "loggedin", True)
+    def set_loggedin(is_loggedin: bool) -> None:
+        setattr(st.session_state, "loggedin", is_loggedin)
 
     @staticmethod
     def get_login_button_submitting() -> bool:

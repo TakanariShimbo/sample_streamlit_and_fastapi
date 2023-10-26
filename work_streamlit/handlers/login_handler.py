@@ -1,59 +1,54 @@
 import json
-from textwrap import dedent
 from typing import Dict, Any
 
 import requests
-import streamlit as st
+import extra_streamlit_components as stx
 
 from handlers.session_state_handler import SessionStateHandler
+from handlers.cookie_handler import CookieHandler
 from base import BACKEND_URL
 
 
-class LoginCheckHandler:
-    @staticmethod
-    def early_return_if_not_logined():
-        if not SessionStateHandler.get_loggedin():
-            st.error("Please login at 🏠 Home")
-            st.stop()
-
-
 class LoginHandler:
-    @staticmethod
-    def __display_loggedin_contents() -> None:
-        contents = dedent(
-            """
-            ### :green[Logged in successfully]🎉
+    def __init__(self):
+        self.cookie_manager = stx.CookieManager()
+        self.cookie_handler = CookieHandler(self.cookie_manager)
 
-            Welcome to the Streamlit sample site.  
-            Please explore the demos available in the sidebar. 
-            """
-        )
-        st.markdown(contents)
+    def check_is_loggedin(self) -> bool:
+        if SessionStateHandler.get_loggedin():
+            return True
+        elif self.cookie_handler.verify_token():
+            return True
+        else:
+            return False
 
-    @staticmethod
-    def __on_click_login_start() -> None:
+    def logout(self):
+        SessionStateHandler.set_loggedin(is_loggedin=False)
+        self.cookie_handler.delete_token()
+    
+    def on_click_login_start(self) -> None:
         SessionStateHandler.set_login_button_submitting(is_submitting=True)
         SessionStateHandler.set_login_message(None)
+        
 
-    @classmethod
-    def __on_click_login_process(cls, inputs_dict: Dict[str, Any]) -> None:
+    def on_click_login_process(self, inputs_dict: Dict[str, Any]) -> bool:
         # Frontend Eealy Return
         missing_labels = [label for label, value in inputs_dict.items() if not value]
         if missing_labels:
-            SessionStateHandler.set_login_message(f"Please input {missing_labels[0]}")
-            return
+            SessionStateHandler.set_login_message(message=f"Please input {missing_labels[0]}")
+            return False
 
         # Backend Eealy Return
-        if not cls.__send_inputs_to_backend(**inputs_dict):
-            SessionStateHandler.set_login_message(f"Incorrect 'User Name' or 'Password'")
-            return
+        if not self.__send_inputs_to_backend(**inputs_dict):
+            SessionStateHandler.set_login_message(message=f"Incorrect 'User Name' or 'Password'")
+            return False
 
-        SessionStateHandler.set_loggedin()
-
-    @staticmethod
-    def __on_click_login_finish() -> None:
+        self.cookie_handler.add_token()
+        SessionStateHandler.set_loggedin(is_loggedin=True)
+        return True
+    
+    def on_click_login_finish(self) -> None:
         SessionStateHandler.set_login_button_submitting(is_submitting=False)
-        st.rerun()  
 
     @staticmethod
     def __send_inputs_to_backend(user_name: str, user_password: str) -> bool:
@@ -75,28 +70,3 @@ class LoginHandler:
             return True
         else:
             return False
-
-    @classmethod
-    def __display_not_loggedin_contents(cls) -> None:
-        with st.form("login_form"):
-            inputs_dict = {
-                "user_name": st.text_input("User Name", type="default"),
-                "user_password": st.text_input("Password", type="password"),
-            }
-            
-            login_message = SessionStateHandler.get_login_message()
-            if login_message:
-                st.error(login_message)
-
-            if st.form_submit_button("Login", on_click=cls.__on_click_login_start ,disabled=SessionStateHandler.get_login_button_submitting()):
-                with st.spinner():
-                    cls.__on_click_login_process(inputs_dict)
-                cls.__on_click_login_finish()           
-
-    @classmethod
-    def display_contents(cls) -> None:
-        if SessionStateHandler.get_loggedin():
-            cls.__display_loggedin_contents()
-
-        else:
-            cls.__display_not_loggedin_contents()
