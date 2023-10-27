@@ -36,7 +36,7 @@ class JwtPayload:
         cls,
         aud: Optional[str] = None,
     ) -> "JwtPayload":
-        now = datetime.utcnow()
+        now = datetime.now()
         return cls(
             jti=str(uuid4()),
             iss=JWT_DEFAULT_ISSUER,
@@ -47,39 +47,66 @@ class JwtPayload:
         )
 
     @classmethod
-    def from_dict(cls, jwt_payload_dict: Dict[str, Any]) -> "JwtPayload":
+    def init_from_dict(cls, jwt_payload_dict: Dict[str, Any]) -> "JwtPayload":
         return cls(
             jti=jwt_payload_dict.get("jti", None),
             iss=jwt_payload_dict.get("iss", None),
             aud=jwt_payload_dict.get("aud", None),
-            iat=cls.timestamp_to_datetime(jwt_payload_dict.get("iat", None)),
-            exp=cls.timestamp_to_datetime(jwt_payload_dict.get("exp", None)),
-            ndf=cls.timestamp_to_datetime(jwt_payload_dict.get("ndf", None)),
+            iat=cls.__timestamp_to_datetime(jwt_payload_dict.get("iat", None)),
+            exp=cls.__timestamp_to_datetime(jwt_payload_dict.get("exp", None)),
+            ndf=cls.__timestamp_to_datetime(jwt_payload_dict.get("ndf", None)),
         )
 
+    @property
+    def jti(self) -> Optional[str]:
+        return self.__jti
+    
+    @property
+    def iss(self) -> Optional[str]:
+        return self.__iss
+    
+    @property
+    def aud(self) -> Optional[str]:
+        return self.__aud
+    
+    @property
+    def iat(self) -> Optional[datetime]:
+        return self.__iat
+    
+    @property
+    def exp(self) -> Optional[datetime]:
+        return self.__exp
+    
+    @property
+    def ndf(self) -> Optional[datetime]:
+        return self.__ndf
+    
     def to_dict(self) -> Dict[str, Any]:
         jwt_payload_dict = {
             "jti": self.__jti,
             "iss": self.__iss,
             "aud": self.__aud,
-            "iat": self.datetime_to_timestamp(self.__iat),
-            "exp": self.datetime_to_timestamp(self.__exp),
-            "ndf": self.datetime_to_timestamp(self.__ndf),
+            "iat": self.__datetime_to_timestamp(self.__iat),
+            "exp": self.__datetime_to_timestamp(self.__exp),
+            "ndf": self.__datetime_to_timestamp(self.__ndf),
         }
         jwt_payload_dict_avoid_none = {k: v for k, v in jwt_payload_dict.items() if v is not None}
         return jwt_payload_dict_avoid_none
-
+    
     @staticmethod
-    def timestamp_to_datetime(val: Optional[int]) -> Optional[datetime]:
-        if val:
-            return datetime.fromtimestamp(val, tz=timezone.utc)
-        return None
+    def __timestamp_to_datetime(val: Optional[int]) -> Optional[datetime]:
+        if not val:
+            return None
 
+        return datetime.fromtimestamp(val, tz=timezone.utc)
+        
     @staticmethod
-    def datetime_to_timestamp(val: Optional[datetime]) -> Optional[int]:
-        if val:
-            return int(val.timestamp())
-        return None
+    def __datetime_to_timestamp(val: Optional[datetime]) -> Optional[int]:
+        if not val:
+            return None
+        
+        return int(val.astimezone(timezone.utc).timestamp())
+        
 
 
 class JwtHandler:
@@ -119,7 +146,7 @@ class JwtHandler:
             algorithms=[JWT_SIGNATURE_ALGORITHM],
             options=cls.__get_decode_options(),
         )
-        jwt_payload = JwtPayload.from_dict(jwt_payload_dict=jwt_payload_dict)
+        jwt_payload = JwtPayload.init_from_dict(jwt_payload_dict=jwt_payload_dict)
         return jwt_payload
     
     @staticmethod

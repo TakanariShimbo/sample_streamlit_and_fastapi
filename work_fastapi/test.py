@@ -25,16 +25,18 @@ TEST POST
 """
 TEST JwtHandler
 """
-# from handlers.jwt_handler import JwtHandler, JwtPayload
+from datetime import datetime, timezone
+from handlers.jwt_handler import JwtHandler, JwtPayload
 
-# original_jwt_payload = JwtPayload.init_with_defaults(aud="AudienceName")
-# print(original_jwt_payload.to_dict())
+original_jwt_payload = JwtPayload.init_with_defaults(aud="AudienceName")
+print(original_jwt_payload.to_dict())
 
-# true_jws_str = JwtHandler.encode_to_jws(jwt_payload=original_jwt_payload)
-# print(true_jws_str)
+true_jws_str = JwtHandler.encode_to_jws(jwt_payload=original_jwt_payload)
+print(true_jws_str)
 
-# decoded_jwt_payload = JwtHandler.decode_from_jws(jws_str=true_jws_str)
-# print(decoded_jwt_payload.to_dict())
+decoded_jwt_payload = JwtHandler.decode_from_jws(jws_str=true_jws_str)
+print(decoded_jwt_payload.to_dict())
+print(decoded_jwt_payload.exp - datetime.now().astimezone(timezone.utc))
 
 
 """
