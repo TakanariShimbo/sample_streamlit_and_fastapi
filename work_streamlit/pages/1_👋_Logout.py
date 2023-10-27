@@ -2,19 +2,20 @@ from textwrap import dedent
 
 import streamlit as st
 
-from handlers.title_handler import TitleHandler
 from handlers.login_handler import LoginHandler
+from components.title_template import TitleTemplate
+from components.not_login_template import NotLoginTemplate
 
 
 # Set Titles
-TitleHandler.set_title(icon="👋", title="Logout")
+TitleTemplate.set_page_configs(icon="👋", title="Logout")
 
 
 # check login
 login_handler = LoginHandler()
-if not login_handler.check_is_login(is_verify_token=False):
-    st.error("Please login at 🏠 Home")
-    st.stop()
+NotLoginTemplate.display_not_login_contents(
+    check_is_login_callback=login_handler.check_is_login,
+)
 
 
 def on_click_logout() -> None:
@@ -23,7 +24,7 @@ def on_click_logout() -> None:
 
 contents = dedent(
     """
-    ### :green[Able to logout below button]🐌
+    ### :green[Click the button below to logout]🖱️
 
     Thank you for enjoying the Streamlit sample site.   
     See you again.   

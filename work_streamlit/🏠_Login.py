@@ -3,12 +3,12 @@ from textwrap import dedent
 import streamlit as st
 
 from handlers.session_state_handler import SessionStateHandler
-from handlers.title_handler import TitleHandler
+from components.title_template import TitleTemplate
 from handlers.login_handler import LoginHandler
 
 
 # Set Titles
-TitleHandler.set_title(icon="🏠", title="Login")
+TitleTemplate.set_page_configs(icon="🏠", title="Login")
 
 
 # Contents
@@ -47,7 +47,7 @@ def display_login_form():
                 pass
             else:    
                 st.rerun()
-    if SessionStateHandler.get_login_state():
+    if SessionStateHandler.get_token_accepted():
         display_login_success_content()
 
 

@@ -5,14 +5,6 @@ import streamlit as st
 
 class SessionStateHandler:
     @staticmethod
-    def get_login_state() -> bool:
-        return st.session_state.get("login_state", False)
-    
-    @staticmethod
-    def set_login_state(is_login: bool) -> None:
-        setattr(st.session_state, "login_state", is_login)
-
-    @staticmethod
     def get_login_button_state() -> bool:
         return st.session_state.get("login_button", False)
 
@@ -27,3 +19,22 @@ class SessionStateHandler:
     @staticmethod
     def set_login_message(message: Optional[str]) -> None:
         setattr(st.session_state, "login_message", message)
+
+    @staticmethod
+    def get_token_varified_count() -> int:
+        return st.session_state.get("token_varified", 0)
+
+    @staticmethod
+    def add_token_varified_count() -> None:
+        try:
+            st.session_state["token_varified"] += 1
+        except (AttributeError, KeyError):
+            setattr(st.session_state, "token_varified", 1)
+
+    @staticmethod
+    def get_token_accepted() -> bool:
+        return st.session_state.get("token_accepted", False)
+
+    @staticmethod
+    def set_token_accepted(is_token_accepted: bool) -> None:
+        setattr(st.session_state, "token_accepted", is_token_accepted)

@@ -1,18 +1,19 @@
 import streamlit as st
 
-from handlers.title_handler import TitleHandler
 from handlers.login_handler import LoginHandler
+from components.title_template import TitleTemplate
+from components.not_login_template import NotLoginTemplate
 
 
 # Set Titles
-TitleHandler.set_title(icon="📄", title="Markdown")
+TitleTemplate.set_page_configs(icon="📄", title="Markdown")
 
 
 # check login
 login_handler = LoginHandler()
-if not login_handler.check_is_login():
-    st.error("Please login at 🏠 Home")
-    st.stop()
+NotLoginTemplate.display_not_login_contents(
+    check_is_login_callback=login_handler.check_is_login,
+)
 
 
 

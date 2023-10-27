@@ -10,3 +10,24 @@ pip install fastapi
 pip install uvicorn
 # pip install sqlalchemy
 ```
+
+
+# Build Server
+
+```
+cd work_fastapi
+uvicorn main:app --reload 
+```
+
+```
+cd work_streamlit
+streamlit run .\🏠_Login.py 
+```
+
+
+# Streamlit
+- handlers  
+    controllers
+    
+- components  
+    views

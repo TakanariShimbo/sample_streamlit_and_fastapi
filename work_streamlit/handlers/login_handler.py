@@ -2,7 +2,6 @@ import json
 from typing import Dict, Any
 
 import requests
-import streamlit as st
 import extra_streamlit_components as stx
 
 from handlers.session_state_handler import SessionStateHandler
@@ -11,33 +10,36 @@ from handlers.backend_response_handler import BackendResponseHandler
 from base import BACKEND_URL
 
 
+MAX_VERIFY_COUNT = 2
+
+# st.cashe_resource or st.cashe_data is require ?
 def get_manager() -> stx.CookieManager:
     return stx.CookieManager()
+
 
 class LoginHandler:
     def __init__(self):
         self.__cookie_manager = get_manager()
         self.__cookie_handler = CookieHandler(self.__cookie_manager)
-
-    def check_is_login(self, is_verify_token=True) -> bool:
-        if SessionStateHandler.get_login_state():
+    
+    def check_is_login(self, is_verify_token_required=True) -> bool:
+        if SessionStateHandler.get_token_accepted():
             return True
-        elif not is_verify_token:
+        elif SessionStateHandler.get_token_varified_count() >= MAX_VERIFY_COUNT:
+            return SessionStateHandler.get_token_accepted()
+        elif not is_verify_token_required:
             return False
-        elif self.__cookie_handler.verify_token():
-            SessionStateHandler.set_login_state(is_login=True)
-            return True
-        else:
-            return False
+        
+        # run only 2 times in session
+        return self.__verify_token()
 
     def logout(self):
-        SessionStateHandler.set_login_state(is_login=False)
+        SessionStateHandler.set_token_accepted(is_token_accepted=False)
         self.__cookie_handler.delete_token()
     
     def on_click_login_start(self) -> None:
         SessionStateHandler.set_login_button_state(is_active=True)
         SessionStateHandler.set_login_message(None)
-        
 
     def on_click_login_process(self, inputs_dict: Dict[str, Any]) -> bool:
         # Frontend Eealy Return
@@ -52,13 +54,21 @@ class LoginHandler:
             SessionStateHandler.set_login_message(message=backend_response.message)
             return False
 
+        # Add Token
         self.__cookie_handler.add_token()
-        SessionStateHandler.set_login_state(is_login=True)
+        SessionStateHandler.set_token_accepted(is_token_accepted=True)
         return True
     
     def on_click_login_finish(self) -> None:
         SessionStateHandler.set_login_button_state(is_active=False)
 
+    def __verify_token(self) -> bool:
+        is_accepted = self.__cookie_handler.verify_token()
+        SessionStateHandler.add_token_varified_count()
+        if is_accepted:
+            SessionStateHandler.set_token_accepted(is_token_accepted=True)
+        return is_accepted
+    
     @staticmethod
     def __send_inputs_to_backend(user_name: str, user_password: str, timeout_seconds: int = 10) -> BackendResponseHandler:
         login_backend_url = f"{BACKEND_URL}/login-user/"
