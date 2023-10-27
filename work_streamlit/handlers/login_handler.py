@@ -7,6 +7,7 @@ import extra_streamlit_components as stx
 from handlers.session_state_handler import SessionStateHandler
 from handlers.cookie_handler import CookieHandler
 from handlers.backend_response_handler import BackendResponseHandler
+from handlers.jwt_handler import JwtHandler
 from base import BACKEND_URL
 
 
@@ -55,7 +56,7 @@ class LoginHandler:
             return False
 
         # Add Token
-        self.__cookie_handler.add_token()
+        self.__cookie_handler.add_token(token=backend_response.contents["authorized_token"])
         SessionStateHandler.set_token_accepted(is_token_accepted=True)
         return True
     
@@ -88,7 +89,7 @@ class LoginHandler:
                 timeout=timeout_seconds,
             )
             if response.status_code == 200:
-                return BackendResponseHandler(is_success=True)
+                return BackendResponseHandler(is_success=True, contents=response.json())
             else:
                 try:
                     error_data = response.json()
