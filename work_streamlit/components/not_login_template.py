@@ -10,5 +10,5 @@ class NotLoginTemplate:
         is_verify_token: bool = True,
     ):
         if not check_is_login_callback(is_verify_token):
-            st.error("Please 🏠Login first.")
+            st.error("Please 🏠Login as the first step.")
             st.stop()
