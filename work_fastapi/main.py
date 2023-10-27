@@ -1,7 +1,6 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, status
 
 from schema import LoginUser
-
 
 
 """
@@ -12,7 +11,7 @@ app = FastAPI()
 
 @app.get("/")
 async def root():
-    return {"contents" : "Hello world"}
+    return {"contents": "Hello world"}
 
 
 @app.post("/login-user/", response_model=LoginUser)
@@ -28,4 +27,7 @@ async def login_user(login_user: LoginUser):
                 "user_password": registered_user.user_password,
             }
 
-    raise HTTPException(status_code=400, detail="Incorrect user_name or user_password")
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="Incorrect user_name or user_password",
+    )
