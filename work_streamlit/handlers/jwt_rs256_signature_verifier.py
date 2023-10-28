@@ -3,12 +3,13 @@ from datetime import datetime, timedelta, timezone
 
 from jose import jwt, JWTError, JWSError
 from jose.constants import ALGORITHMS
+from jose.backends.rsa_backend import RSAKey
 
-from base import JWT_HS256_SIGNATURE_SECRET_KEY
 from handlers.jwt_payload_handler import JwtPayload    
+from base import JWT_RS256_SIGNATURE_PUBLIC_KEY
 
 
-class JwtHs256SignatureVerifier:
+class JwtRs256SignatureVerifier:
     @classmethod
     def verify_jws(cls, jws_str: str) -> Optional[JwtPayload]:
         jwt_payload = cls.__parse_payload_from_jws(jws_str=jws_str)
@@ -28,8 +29,8 @@ class JwtHs256SignatureVerifier:
         try:
             jwt_payload_dict = jwt.decode(
                 token=jws_str,
-                key=JWT_HS256_SIGNATURE_SECRET_KEY,
-                algorithms=[ALGORITHMS.HS256],
+                key=RSAKey(key=JWT_RS256_SIGNATURE_PUBLIC_KEY, algorithm=ALGORITHMS.RS256),
+                algorithms=[ALGORITHMS.RS256],
                 options=cls.__get_decode_options(),
             )
         except (JWSError, JWTError):
