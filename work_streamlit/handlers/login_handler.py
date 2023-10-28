@@ -7,7 +7,6 @@ import extra_streamlit_components as stx
 from handlers.session_state_handler import SessionStateHandler
 from handlers.cookie_handler import CookieHandler
 from handlers.backend_response_handler import BackendResponseHandler
-from handlers.jwt_handler import JwtHandler
 from base import BACKEND_URL
 
 

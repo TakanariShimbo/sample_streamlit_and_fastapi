@@ -23,23 +23,6 @@ TEST POST
 
 
 """
-TEST JwtHandler
-"""
-from datetime import datetime, timezone, timedelta
-from handlers.jwt_handler import JwtHandler, JwtPayload
-
-original_jwt_payload = JwtPayload.init_with_defaults(aud="AudienceName")
-print(original_jwt_payload.to_dict())
-
-true_jws_str = JwtHandler.encode_to_jws(jwt_payload=original_jwt_payload)
-print(true_jws_str)
-
-decoded_jwt_payload = JwtHandler.decode_from_jws(jws_str=true_jws_str)
-print(decoded_jwt_payload.to_dict())
-print((decoded_jwt_payload.exp - datetime.now().astimezone(timezone.utc)) > timedelta(seconds=0))
-
-
-"""
 TEST PASSWORD
 """
 # from handlers.password_handler import PasswordHandler
@@ -55,3 +38,46 @@ TEST PASSWORD
 #     )
 # )
 # "$2b$12$rsf3thhIeMPCJrMdR8Os6.d4maX0QBVs3P7kH7bw9Z2pYHfX8EZdq"
+
+
+"""
+
+"""
+# from typing import Tuple
+# from cryptography.hazmat.backends import default_backend
+# from cryptography.hazmat.primitives import serialization
+# from cryptography.hazmat.primitives.asymmetric import rsa
+# import base64
+
+
+# def generate_rsa_keypair() -> Tuple[str, str]:
+#     # キーペアの生成
+#     private_key = rsa.generate_private_key(
+#         public_exponent=65537,
+#         key_size=2048,
+#         backend=default_backend()
+#     )
+    
+#     # 私有鍵をPEM形式でシリアライズ
+#     pem_private = private_key.private_bytes(
+#         encoding=serialization.Encoding.PEM,
+#         format=serialization.PrivateFormat.PKCS8,
+#         encryption_algorithm=serialization.NoEncryption()
+#     )
+    
+#     # 公開鍵をPEM形式でシリアライズ
+#     public_key = private_key.public_key()
+#     pem_public = public_key.public_bytes(
+#         encoding=serialization.Encoding.PEM,
+#         format=serialization.PublicFormat.SubjectPublicKeyInfo
+#     )
+    
+#     # base64 エンコード
+#     pem_private_base64 = base64.b64encode(pem_private).decode('utf-8')
+#     pem_public_base64 = base64.b64encode(pem_public).decode('utf-8')
+    
+#     return pem_private_base64, pem_public_base64
+
+# private_key_base64, public_key_base64 = generate_rsa_keypair()
+# print("Private Key:", private_key_base64)
+# print("Public Key:", public_key_base64)

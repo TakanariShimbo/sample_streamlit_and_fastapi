@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, status
 
-from handlers.jwt_handler import JwtHandler
+from work_fastapi.handlers.jwt_hs256_signature_creater import JwtHs256SignatureCreater
 from handlers.password_handler import PasswordHandler
 from schemas.user_schema import LoginUser
 from schemas.token_schema import Token
@@ -31,7 +31,7 @@ async def login_user(login_user: LoginUser):
             hashed_password=registered_user.user_password,
         )
         if is_username_correct and is_password_corrent:
-            return {"authorized_token": JwtHandler.create_jws(client_id=login_user.user_name)}
+            return {"authorized_token": JwtHs256SignatureCreater.create_jws(client_id=login_user.user_name)}
 
     # if not find
     raise HTTPException(

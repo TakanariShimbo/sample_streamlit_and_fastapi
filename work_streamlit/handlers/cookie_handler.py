@@ -1,6 +1,6 @@
 import extra_streamlit_components as stx
 
-from handlers.jwt_handler import JwtHandler
+from handlers.jwt_hs256_signature_verifier import JwtHs256SignatureVerifier
 
 
 COOKIE_KEY = "test_streamlit_cookie"
@@ -11,7 +11,7 @@ class CookieHandler:
         self.__cookie_manager = cookie_manager
         
     def add_token(self, token: str) -> bool:
-        jwt_payload = JwtHandler.verify_jws(jws_str=token)
+        jwt_payload = JwtHs256SignatureVerifier.verify_jws(jws_str=token)
         if not jwt_payload:
             return False
         if not jwt_payload.exp:
@@ -25,7 +25,7 @@ class CookieHandler:
         if not token:
             return False
 
-        jwt_payload = JwtHandler.verify_jws(jws_str=token)
+        jwt_payload = JwtHs256SignatureVerifier.verify_jws(jws_str=token)
         if not jwt_payload:
             return False
 
