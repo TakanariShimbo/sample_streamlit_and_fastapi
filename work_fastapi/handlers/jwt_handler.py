@@ -112,14 +112,16 @@ class JwtPayload:
 class JwtHandler:
     @classmethod
     def verify_jws(cls, jws_str: str) -> bool:
+        # signature ng
         try:
-            jwt.decode(
-                token=jws_str,
-                key=JWT_SIGNATURE_SECRET_KEY,
-                algorithms=[JWT_SIGNATURE_ALGORITHM],
-                options=cls.__get_decode_options(),
-            )
+            jws_payload = cls.decode_from_jws(jws_str=jws_str)
         except (JWSError, JWTError):
+            return False
+        # not has exp
+        if not jws_payload.exp:
+            return False
+        # exp ng
+        if (jws_payload.exp - datetime.now().astimezone(timezone.utc)) < timedelta(seconds=0):
             return False
         return True
     

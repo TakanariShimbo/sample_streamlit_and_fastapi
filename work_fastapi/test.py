@@ -25,7 +25,7 @@ TEST POST
 """
 TEST JwtHandler
 """
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from handlers.jwt_handler import JwtHandler, JwtPayload
 
 original_jwt_payload = JwtPayload.init_with_defaults(aud="AudienceName")
@@ -36,7 +36,7 @@ print(true_jws_str)
 
 decoded_jwt_payload = JwtHandler.decode_from_jws(jws_str=true_jws_str)
 print(decoded_jwt_payload.to_dict())
-print(decoded_jwt_payload.exp - datetime.now().astimezone(timezone.utc))
+print((decoded_jwt_payload.exp - datetime.now().astimezone(timezone.utc)) > timedelta(seconds=0))
 
 
 """
