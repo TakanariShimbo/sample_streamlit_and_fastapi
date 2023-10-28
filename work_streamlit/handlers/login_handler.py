@@ -56,7 +56,10 @@ class LoginHandler:
             return False
 
         # Add Token
-        self.__cookie_handler.add_token(token=backend_response.contents["authorized_token"])
+        is_success = self.__cookie_handler.add_token(token=backend_response.contents["authorized_token"])
+        if not is_success:
+            return False
+        
         SessionStateHandler.set_token_accepted(is_token_accepted=True)
         return True
     

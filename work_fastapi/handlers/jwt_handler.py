@@ -111,19 +111,19 @@ class JwtPayload:
 
 class JwtHandler:
     @classmethod
-    def verify_jws(cls, jws_str: str) -> bool:
+    def verify_jws(cls, jws_str: str) -> Optional[JwtPayload]:
         # signature ng
         try:
-            jws_payload = cls.decode_from_jws(jws_str=jws_str)
+            jwt_payload = cls.decode_from_jws(jws_str=jws_str)
         except (JWSError, JWTError):
-            return False
+            return None
         # not has exp
-        if not jws_payload.exp:
-            return False
+        if not jwt_payload.exp:
+            return None
         # exp ng
-        if (jws_payload.exp - datetime.now().astimezone(timezone.utc)) < timedelta(seconds=0):
-            return False
-        return True
+        if (jwt_payload.exp - datetime.now().astimezone(timezone.utc)) < timedelta(seconds=0):
+            return None
+        return jwt_payload
     
     @classmethod
     def create_jws(cls, client_id: str) -> str:
