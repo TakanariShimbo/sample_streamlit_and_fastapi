@@ -31,6 +31,23 @@ streamlit run .\🏠_Login.py
 # Streamlit
 - handlers  
     controllers
+    helpers
     
 - components  
     views
+
+- pages
+    routes
+
+- login.py
+    main
+
+# FastAPI
+- handlers
+    controllers
+    helpers
+
+- schemes
+
+- main.py
+    main
