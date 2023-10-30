@@ -17,23 +17,42 @@ pip install python-multipart
 pip install openai
 ```
 
+# Set Params
+
+## Create RS256 Keys
+* private
+```
+openssl genpkey -algorithm RSA -out private_key.pem
+```
+* public
+```
+openssl rsa -pubout -in private_key.pem -out public_key.pem
+```
+
 # Build Server
+
+## Streamlit
 
 ```
 cd work_fastapi
 uvicorn main:app --reload
 ```
 
+## FastAIP
+
 ```
 cd work_streamlit
 streamlit run .\1_🏠_Home.py
 ```
 
-# Streamlit
+# Directorys
 
-- handlers  
-   controllers
+## Streamlit
+
+- handlers   
+  controllers
   helpers
+
 - components  
    views
 
@@ -45,7 +64,7 @@ streamlit run .\1_🏠_Home.py
 - login.py
   main
 
-# FastAPI
+## FastAPI
 
 - handlers
   controllers

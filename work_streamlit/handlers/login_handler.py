@@ -9,7 +9,7 @@ from handlers.cookie_handler import CookieHandler
 from handlers.response_handler import ResponseHandler
 from handlers.schema_handler import SchemaHandler
 from schemas.user_schema import LoginUser
-from base import BACKEND_URL
+from params import BACKEND_URL
 
 
 MAX_VERIFY_COUNT = 2

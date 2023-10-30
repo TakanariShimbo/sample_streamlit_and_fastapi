@@ -1,7 +1,7 @@
 from jose import jwt
 from jose.constants import ALGORITHMS
 
-from base import JWT_HS256_SIGNATURE_SECRET_KEY
+from params import JWT_HS256_SIGNATURE_SECRET_KEY
 from handlers.jwt_payload_handler import JwtPayload
 
 

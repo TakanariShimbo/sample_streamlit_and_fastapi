@@ -6,7 +6,7 @@ from jose.constants import ALGORITHMS
 from jose.backends.rsa_backend import RSAKey
 
 from handlers.jwt_payload_handler import JwtPayload    
-from base import JWT_RS256_SIGNATURE_PUBLIC_KEY
+from params import JWT_RS256_SIGNATURE_PUBLIC_KEY
 
 
 class JwtRs256SignatureVerifier:

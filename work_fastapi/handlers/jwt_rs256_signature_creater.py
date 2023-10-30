@@ -2,7 +2,7 @@ from jose import jwt
 from jose.constants import ALGORITHMS
 from jose.backends.rsa_backend import RSAKey
 
-from base import JWT_RS256_SIGNATURE_PRIVATE_KEY
+from params import JWT_RS256_SIGNATURE_PRIVATE_KEY
 from handlers.jwt_payload_handler import JwtPayload
 
 
