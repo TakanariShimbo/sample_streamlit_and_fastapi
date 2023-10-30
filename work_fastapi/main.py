@@ -32,7 +32,10 @@ async def login_user(login_user: LoginUser):
         )
         if is_username_correct and is_password_corrent:
             return {
-                "authorized_token": JwtRs256SignatureCreater.create_jws(client_id=login_user.user_name),
+                "detail": "Login success!",
+                "contents": {
+                    "authorized_token": JwtRs256SignatureCreater.create_jws(client_id=login_user.user_name),
+                },
             }
 
     # if not find
