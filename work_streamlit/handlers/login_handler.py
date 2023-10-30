@@ -34,7 +34,7 @@ class LoginHandler:
         elif not is_verify_token_required:
             return False
 
-        # run only 2 times in session
+        # run only first 2 times in session
         return self.__verify_token()
 
     def logout(self):
