@@ -6,7 +6,7 @@ import extra_streamlit_components as stx
 
 from handlers.session_state_handler import SessionStateHandler
 from handlers.cookie_handler import CookieHandler
-from handlers.backend_response_handler import BackendResponseHandler
+from handlers.response_handler import ResponseHandler
 from base import BACKEND_URL
 
 
@@ -74,7 +74,7 @@ class LoginHandler:
         return is_accepted
 
     @staticmethod
-    def __send_inputs_to_backend(user_name: str, user_password: str, timeout_seconds: int = 10) -> BackendResponseHandler:
+    def __send_inputs_to_backend(user_name: str, user_password: str, timeout_seconds: int = 10) -> ResponseHandler:
         login_backend_url = f"{BACKEND_URL}/login-user/"
         send_data = {
             "user_name": user_name,
@@ -92,13 +92,13 @@ class LoginHandler:
                 timeout=timeout_seconds,
             )
         except requests.Timeout:
-            return BackendResponseHandler(is_success=False, detail="TimeoutError: request to backend server.")
+            return ResponseHandler(is_success=False, detail="TimeoutError: request to backend server.")
         except requests.RequestException as e:
-            return BackendResponseHandler(is_success=False, detail=f"RequestError: request to backend server. {str(e)}")
+            return ResponseHandler(is_success=False, detail=f"RequestError: request to backend server. {str(e)}")
 
         try:
             response_dict = response.json()
         except json.JSONDecodeError:
-            return BackendResponseHandler(is_success=False, detail="JSONDecodeError: Failed to parse json of response from backend server.")
+            return ResponseHandler(is_success=False, detail="JSONDecodeError: Failed to parse json of response from backend server.")
 
-        return BackendResponseHandler.init_from_response(status_code=response.status_code, response_dict=response_dict)
+        return ResponseHandler.init_from_response(status_code=response.status_code, response_dict=response_dict)

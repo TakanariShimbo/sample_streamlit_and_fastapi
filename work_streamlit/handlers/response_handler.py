@@ -1,7 +1,7 @@
 from typing import Optional, Dict, Any
 
 
-class BackendResponseHandler:
+class ResponseHandler:
     def __init__(
         self,
         is_success: bool,
@@ -25,7 +25,7 @@ class BackendResponseHandler:
         return self.__contents
 
     @classmethod
-    def init_from_response(cls, status_code: int, response_dict: Dict[str, Any]) -> "BackendResponseHandler":
+    def init_from_response(cls, status_code: int, response_dict: Dict[str, Any]) -> "ResponseHandler":
         return cls(
             is_success=(status_code == 200),
             detail=response_dict.get("detail", None),
