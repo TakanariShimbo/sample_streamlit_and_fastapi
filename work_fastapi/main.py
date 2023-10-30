@@ -3,7 +3,7 @@ from fastapi import FastAPI, HTTPException, status
 from handlers.jwt_rs256_signature_creater import JwtRs256SignatureCreater
 from handlers.password_handler import PasswordHandler
 from schemas.user_schema import LoginUser
-from schemas.token_schema import Token
+from schemas.token_schema import TokenResponse, Token
 
 
 """
@@ -21,7 +21,7 @@ async def root():
     return {"contents": "Hello world"}
 
 
-@app.post("/login-user/", response_model=Token)
+@app.post("/login-user/", response_model=TokenResponse)
 async def login_user(login_user: LoginUser):
     for registered_user in FAKE_REGISTERED_USERS:
         # search same registered_user with login_user
@@ -32,10 +32,7 @@ async def login_user(login_user: LoginUser):
         )
         if is_username_correct and is_password_corrent:
             return {
-                "detail": "Login success!",
-                "contents": {
-                    "authorized_token": JwtRs256SignatureCreater.create_jws(client_id=login_user.user_name),
-                },
+                "contents": Token(authorized_token=JwtRs256SignatureCreater.create_jws(client_id=login_user.user_name)),
             }
 
     # if not find

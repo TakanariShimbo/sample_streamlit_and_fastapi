@@ -1,12 +1,14 @@
 import json
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 import requests
 import extra_streamlit_components as stx
+from pydantic import ValidationError
 
 from handlers.session_state_handler import SessionStateHandler
 from handlers.cookie_handler import CookieHandler
 from handlers.response_handler import ResponseHandler
+from schemas.user_schema import LoginUser
 from base import BACKEND_URL
 
 
@@ -44,9 +46,8 @@ class LoginHandler:
 
     def on_click_login_process(self, inputs_dict: Dict[str, Any]) -> bool:
         # Frontend Eealy Return
-        missing_labels = [label for label, value in inputs_dict.items() if not value]
-        if missing_labels:
-            SessionStateHandler.set_login_message(message=f"Please input {missing_labels[0]}")
+        login_user = self.__inputs_check(inputs_dict=inputs_dict)
+        if not login_user:
             return False
 
         # Backend Eealy Return
@@ -62,6 +63,20 @@ class LoginHandler:
 
         SessionStateHandler.set_token_accepted(is_token_accepted=True)
         return True
+
+    @staticmethod
+    def __inputs_check(inputs_dict: Dict[str, Any]) -> Optional[LoginUser]:
+        try:
+            login_user = LoginUser(**inputs_dict)
+            return login_user
+        except ValidationError as e:
+            error_message = ""
+            for error in e.errors():
+                field = error['loc'][0]
+                msg = error['msg']
+                error_message += f"{field}: {msg}"
+                SessionStateHandler.set_login_message(message=error_message)
+                return None
 
     def on_click_login_finish(self) -> None:
         SessionStateHandler.set_login_button_state(is_active=False)

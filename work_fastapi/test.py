@@ -81,3 +81,24 @@ TEST PASSWORD
 # private_key_base64, public_key_base64 = generate_rsa_keypair()
 # print("Private Key:", private_key_base64)
 # print("Public Key:", public_key_base64)
+
+
+"""
+
+"""
+from typing import Optional
+from pydantic import BaseModel, Field, ValidationError
+
+
+class User(BaseModel):
+    user_name: Optional[str] = Field(min_length=4, max_length=20)
+    user_password: Optional[str] = Field(min_length=8, max_length=20)
+
+try:
+    user = User(user_name="aa", user_password="123")
+except ValidationError as e:
+    error_message = ""
+    for error in e.errors():
+        field = error['loc'][0]
+        msg = error['msg']
+        error_message += f"{field}: {msg}\n"
