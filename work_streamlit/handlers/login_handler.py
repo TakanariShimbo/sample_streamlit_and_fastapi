@@ -47,8 +47,7 @@ class LoginHandler:
 
     def on_click_login_process(self, inputs_dict: Dict[str, Any]) -> bool:
         # Frontend Eealy Return
-        login_user = self.__inputs_check(inputs_dict=inputs_dict)
-        if not login_user:
+        if not self.__inputs_check(inputs_dict=inputs_dict):
             return False
 
         # Backend Eealy Return
@@ -66,13 +65,13 @@ class LoginHandler:
         return True
 
     @staticmethod
-    def __inputs_check(inputs_dict: Dict[str, Any]) -> Optional[LoginUser]:
+    def __inputs_check(inputs_dict: Dict[str, Any]) -> bool:
         response_handler = SchemaHandler.create_instance(schema_class=LoginUser, kwargs=inputs_dict)
         if response_handler.is_success:
-            return response_handler.contents["created_instance"]
+            return True
         else:
             SessionStateHandler.set_login_message(message=response_handler.detail)
-            return None
+            return False
 
     def on_click_login_finish(self) -> None:
         SessionStateHandler.set_login_button_state(is_active=False)
