@@ -1,9 +1,8 @@
 import json
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 
 import requests
 import extra_streamlit_components as stx
-from pydantic import ValidationError
 
 from handlers.session_state_handler import SessionStateHandler
 from handlers.cookie_handler import CookieHandler
