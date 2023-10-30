@@ -8,7 +8,7 @@ from handlers.login_handler import LoginHandler
 
 
 # Set Titles
-TitleTemplate.set_page_configs(icon="🏠", title="Login")
+TitleTemplate.set_page_configs(icon="🏠", title="Home")
 
 
 # Contents
@@ -16,15 +16,20 @@ login_handler = LoginHandler()
 
 
 def display_login_success_content():
+    def on_click_logout() -> None:
+        login_handler.logout()
+
+
     contents = dedent(
         """
-        ### :green[Logged in successfully]🎉
+        ### :green[Click the button below to logout]👋
 
-        Welcome to the Streamlit sample site.  
-        Please explore the demos available in the sidebar. 
+        Thank you for enjoying the Streamlit sample site.   
+        See you again.   
         """
     )
     st.markdown(contents)
+    st.button("Logout", key="Logout Button", on_click=on_click_logout)
 
 
 def display_login_form():

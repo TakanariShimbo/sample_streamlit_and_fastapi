@@ -1,4 +1,5 @@
 # Install libs
+
 ```
 pip install streamlit
 pip install extra_streamlit_components
@@ -14,40 +15,41 @@ pip install python-multipart
 # pip install sqlalchemy
 ```
 
-
 # Build Server
 
 ```
 cd work_fastapi
-uvicorn main:app --reload 
+uvicorn main:app --reload
 ```
 
 ```
 cd work_streamlit
-streamlit run .\🏠_Login.py 
+streamlit run .\1_🏠_Home.py
 ```
 
-
 # Streamlit
+
 - handlers  
-    controllers
-    helpers
-    
+   controllers
+  helpers
 - components  
-    views
+   views
 
 - pages
-    routes
+  routes
+
+- schemes
 
 - login.py
-    main
+  main
 
 # FastAPI
+
 - handlers
-    controllers
-    helpers
+  controllers
+  helpers
 
 - schemes
 
 - main.py
-    main
+  main
