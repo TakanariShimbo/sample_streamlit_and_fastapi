@@ -53,6 +53,7 @@ def display_login_form():
             else:    
                 st.rerun()
     if SessionStateHandler.get_token_accepted():
+        st.balloons()
         display_login_success_content()
 
 
