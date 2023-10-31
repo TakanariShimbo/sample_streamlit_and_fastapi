@@ -4,7 +4,7 @@ from typing import Dict, Any
 import requests
 import extra_streamlit_components as stx
 
-from schemas.user_schema import LoginUser
+from schemas.user_schema import User
 from handlers.session_state_handler import SessionStateHandler
 from handlers.cookie_handler import CookieHandler
 from handlers.response_handler import ResponseHandler
@@ -44,13 +44,17 @@ class LoginHandler:
         SessionStateHandler.set_login_button_state(is_active=True)
         SessionStateHandler.set_login_message(None)
 
+    def on_click_register_start(self) -> None:
+        SessionStateHandler.set_register_button_state(is_active=True)
+        SessionStateHandler.set_register_message(None)
+
     def on_click_login_process(self, inputs_dict: Dict[str, Any]) -> bool:
         # Frontend Eealy Return
-        if not self.__inputs_check(inputs_dict=inputs_dict):
+        if not self.__login_inputs_check(inputs_dict=inputs_dict):
             return False
 
         # Backend Eealy Return
-        backend_response = self.__send_inputs_to_backend(**inputs_dict)
+        backend_response = self.__send_login_inputs_to_backend(**inputs_dict)
         if not backend_response.is_success:
             SessionStateHandler.set_login_message(message=backend_response.detail)
             return False
@@ -62,18 +66,49 @@ class LoginHandler:
 
         SessionStateHandler.set_token_accepted(is_token_accepted=True)
         return True
+    
+    def on_click_register_process(self, inputs_dict: Dict[str, Any]) -> bool:
+        # Frontend Eealy Return
+        if not self.__register_inputs_check(inputs_dict=inputs_dict):
+            return False
+
+        # Backend Eealy Return
+        backend_response = self.__send_register_inputs_to_backend(**inputs_dict)
+        if not backend_response.is_success:
+            SessionStateHandler.set_register_message(message=backend_response.detail)
+            return False
+
+        # Add Token
+        is_success = self.__cookie_handler.add_token(token=backend_response.contents["authorized_token"])
+        if not is_success:
+            return False
+
+        SessionStateHandler.set_token_accepted(is_token_accepted=True)
+        return True
 
     @staticmethod
-    def __inputs_check(inputs_dict: Dict[str, Any]) -> bool:
-        response_handler = SchemaHandler.create_instance(schema_class=LoginUser, kwargs=inputs_dict)
+    def __login_inputs_check(inputs_dict: Dict[str, Any]) -> bool:
+        response_handler = SchemaHandler.create_instance(schema_class=User, kwargs=inputs_dict)
         if response_handler.is_success:
             return True
         else:
             SessionStateHandler.set_login_message(message=response_handler.detail)
             return False
+        
+    @staticmethod
+    def __register_inputs_check(inputs_dict: Dict[str, Any]) -> bool:
+        response_handler = SchemaHandler.create_instance(schema_class=User, kwargs=inputs_dict)
+        if response_handler.is_success:
+            return True
+        else:
+            SessionStateHandler.set_register_message(message=response_handler.detail)
+            return False
 
     def on_click_login_finish(self) -> None:
         SessionStateHandler.set_login_button_state(is_active=False)
+
+    def on_click_register_finish(self) -> None:
+        SessionStateHandler.set_register_button_state(is_active=False)
 
     def __verify_token(self) -> bool:
         is_accepted = self.__cookie_handler.verify_token()
@@ -82,9 +117,17 @@ class LoginHandler:
             SessionStateHandler.set_token_accepted(is_token_accepted=True)
         return is_accepted
 
+    @classmethod
+    def __send_login_inputs_to_backend(cls, user_name: str, user_password: str, timeout_seconds: int = 10) -> ResponseHandler:
+        return cls.__send_inputs_to_backend(user_name=user_name, user_password=user_password, backend_rooter="login-user", timeout_seconds=timeout_seconds)
+    
+    @classmethod
+    def __send_register_inputs_to_backend(cls, user_name: str, user_password: str, timeout_seconds: int = 10) -> ResponseHandler:
+        return cls.__send_inputs_to_backend(user_name=user_name, user_password=user_password, backend_rooter="register-user", timeout_seconds=timeout_seconds)
+
     @staticmethod
-    def __send_inputs_to_backend(user_name: str, user_password: str, timeout_seconds: int = 10) -> ResponseHandler:
-        login_backend_url = f"{BACKEND_URL}/login-user/"
+    def __send_inputs_to_backend(user_name: str, user_password: str, backend_rooter: str, timeout_seconds: int = 10) -> ResponseHandler:
+        login_backend_url = f"{BACKEND_URL}/{backend_rooter}/"
         send_data = {
             "user_name": user_name,
             "user_password": user_password,
