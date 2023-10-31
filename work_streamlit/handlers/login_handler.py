@@ -38,7 +38,7 @@ class LoginHandler:
 
     def logout(self):
         SessionStateHandler.set_token_accepted(is_token_accepted=False)
-        self.__cookie_handler.delete_token()
+        self.__cookie_handler.delete_token()        
 
     def on_click_login_start(self) -> None:
         SessionStateHandler.set_login_button_state(is_active=True)
