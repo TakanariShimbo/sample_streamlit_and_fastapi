@@ -83,22 +83,37 @@ TEST PASSWORD
 # print("Public Key:", public_key_base64)
 
 
-"""
+# """
+# Pydantic
+# """
+# from typing import Optional
+# from pydantic import BaseModel, Field, ValidationError
 
-"""
-from typing import Optional
-from pydantic import BaseModel, Field, ValidationError
+
+# class User(BaseModel):
+#     user_name: Optional[str] = Field(min_length=4, max_length=20)
+#     user_password: Optional[str] = Field(min_length=8, max_length=20)
+
+# try:
+#     user = User(user_name="aa", user_password="123")
+# except ValidationError as e:
+#     error_message = ""
+#     for error in e.errors():
+#         field = error['loc'][0]
+#         msg = error['msg']
+#         error_message += f"{field}: {msg}\n"
 
 
-class User(BaseModel):
-    user_name: Optional[str] = Field(min_length=4, max_length=20)
-    user_password: Optional[str] = Field(min_length=8, max_length=20)
+import time
 
-try:
-    user = User(user_name="aa", user_password="123")
-except ValidationError as e:
-    error_message = ""
-    for error in e.errors():
-        field = error['loc'][0]
-        msg = error['msg']
-        error_message += f"{field}: {msg}\n"
+
+def sample_generator():
+    cnt = 0
+    while cnt < 5:
+        cnt += 1
+        time.sleep(1)
+        yield cnt
+
+
+for cnt in sample_generator():
+    print(cnt)
