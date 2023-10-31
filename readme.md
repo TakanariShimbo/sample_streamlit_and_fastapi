@@ -18,6 +18,7 @@ pip install openai
 ```
 
 # Set Params
+create params.py refering params_sample.py
 
 ## Create HS256 Key
 ```
@@ -50,7 +51,7 @@ cd work_streamlit
 streamlit run .\1_🏠_Home.py
 ```
 
-# Directorys
+# Dirs
 
 ## Streamlit
 
