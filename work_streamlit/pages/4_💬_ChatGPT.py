@@ -33,7 +33,7 @@ if prompt:
 
     with st.chat_message(ASSISTANT_NAME):
         answer_area = st.empty()
-        answer = ChatGptHandler.query_and_display_answer_streamly(prompt=prompt, answer_area=answer_area)
+        answer = ChatGptHandler.query_and_display_answer_streamly(prompt=prompt, answer_area=answer_area, original_chat_history=SessionStateHandler.get_chat_history())
         
     SessionStateHandler.set_chat_history(role=USER_NAME, content=prompt)
     SessionStateHandler.set_chat_history(role=ASSISTANT_NAME, content=answer)

@@ -1,7 +1,6 @@
-from typing import Any
+from typing import Any, Dict, List
 
 import openai
-from pydantic import BaseModel
 from streamlit.delta_generator import DeltaGenerator
 
 from params import OPENAI_APIKEY
@@ -10,14 +9,15 @@ from params import OPENAI_APIKEY
 openai.api_key = OPENAI_APIKEY
 
 
-class ChatGptHandler(BaseModel):
+class ChatGptHandler:
     @staticmethod
-    def query_streamly(prompt: str, model: str = "gpt-3.5-turbo") -> Any:
+    def query_streamly(prompt: str, original_chat_history: List[Dict[str, str]] = [], model: str = "gpt-3.5-turbo") -> Any:
+        chat_history = original_chat_history.copy()
+        chat_history.append({"role": "user", "content": prompt})
+        
         stream_response = openai.ChatCompletion.create(
             model=model,
-            messages=[
-                {"role": "user", "content": prompt},
-            ],
+            messages=chat_history,
             stream=True,
         )
         return stream_response
@@ -32,7 +32,7 @@ class ChatGptHandler(BaseModel):
         return answer
 
     @classmethod
-    def query_and_display_answer_streamly(cls, prompt: str, answer_area: DeltaGenerator, model: str = "gpt-3.5-turbo") -> str:
-        stream_response = cls.query_streamly(prompt=prompt, model=model)
+    def query_and_display_answer_streamly(cls, prompt: str, answer_area: DeltaGenerator, original_chat_history: List[Dict[str, str]] = [], model: str = "gpt-3.5-turbo") -> str:
+        stream_response = cls.query_streamly(prompt=prompt, original_chat_history=original_chat_history, model=model)
         answer = cls.display_answer_streamly(stream_response=stream_response, answer_area=answer_area)
         return answer
