@@ -34,8 +34,8 @@ def display_register_success_content():
 def display_register_form():
     with st.form("register_form", clear_on_submit=False):
         inputs_dict = {
-            "user_name": st.text_input("User Name", type="default", key="User Name Input in Register Form"),
-            "user_password": st.text_input("Password", type="password", key="Password Input in Register Form"),
+            "user_name": st.text_input("User Name", type="default", key="User Name Input in Register Form", disabled=SessionStateHandler.get_register_button_state()),
+            "user_password": st.text_input("Password", type="password", key="Password Input in Register Form", disabled=SessionStateHandler.get_register_button_state()),
         }
     
         register_message = SessionStateHandler.get_register_message()

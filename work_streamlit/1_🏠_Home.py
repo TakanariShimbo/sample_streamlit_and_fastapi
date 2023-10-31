@@ -35,8 +35,8 @@ def display_login_success_content():
 def display_login_form():
     with st.form("login_form", clear_on_submit=False):
         inputs_dict = {
-            "user_name": st.text_input("User Name", type="default", key="User Name Input in Login Form"),
-            "user_password": st.text_input("Password", type="password", key="Password Input in Login Form"),
+            "user_name": st.text_input("User Name", type="default", key="User Name Input in Login Form", disabled=SessionStateHandler.get_login_button_state()),
+            "user_password": st.text_input("Password", type="password", key="Password Input in Login Form", disabled=SessionStateHandler.get_login_button_state()),
         }
     
         login_message = SessionStateHandler.get_login_message()
