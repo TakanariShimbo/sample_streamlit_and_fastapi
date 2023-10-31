@@ -15,6 +15,7 @@ pip install python-multipart
 # pip install sqlalchemy
 
 pip install openai
+pip install opencv-python
 ```
 
 # Set Params
