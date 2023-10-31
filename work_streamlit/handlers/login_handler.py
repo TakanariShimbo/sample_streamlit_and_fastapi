@@ -4,11 +4,11 @@ from typing import Dict, Any
 import requests
 import extra_streamlit_components as stx
 
+from schemas.user_schema import LoginUser
 from handlers.session_state_handler import SessionStateHandler
 from handlers.cookie_handler import CookieHandler
 from handlers.response_handler import ResponseHandler
 from handlers.schema_handler import SchemaHandler
-from schemas.user_schema import LoginUser
 from params import BACKEND_URL
 
 
@@ -28,7 +28,7 @@ class LoginHandler:
     def check_is_login(self, is_verify_token_required=True) -> bool:
         if SessionStateHandler.get_token_accepted():
             return True
-        elif SessionStateHandler.get_token_varified_count() >= MAX_VERIFY_COUNT:
+        elif SessionStateHandler.get_token_verified_count() >= MAX_VERIFY_COUNT:
             return SessionStateHandler.get_token_accepted()
         elif not is_verify_token_required:
             return False
@@ -77,7 +77,7 @@ class LoginHandler:
 
     def __verify_token(self) -> bool:
         is_accepted = self.__cookie_handler.verify_token()
-        SessionStateHandler.add_token_varified_count()
+        SessionStateHandler.add_token_verified_count()
         if is_accepted:
             SessionStateHandler.set_token_accepted(is_token_accepted=True)
         return is_accepted

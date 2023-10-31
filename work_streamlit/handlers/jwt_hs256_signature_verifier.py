@@ -4,8 +4,8 @@ from datetime import datetime, timedelta, timezone
 from jose import jwt, JWTError, JWSError
 from jose.constants import ALGORITHMS
 
-from params import JWT_HS256_SIGNATURE_SECRET_KEY
 from handlers.jwt_payload_handler import JwtPayload    
+from params import JWT_HS256_SIGNATURE_SECRET_KEY
 
 
 class JwtHs256SignatureVerifier:

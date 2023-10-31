@@ -3,7 +3,7 @@ import extra_streamlit_components as stx
 from handlers.jwt_rs256_signature_verifier import JwtRs256SignatureVerifier
 
 
-COOKIE_KEY = "test_streamlit_cookie"
+COOKIE_KEY = "sample_streamlit_and_fastapi"
 
 
 class CookieHandler:

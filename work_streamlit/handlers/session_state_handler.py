@@ -2,62 +2,62 @@ from typing import Optional, List, Dict
 
 import streamlit as st
 
-from handlers.chatgpt_types import SenderType
+from types.sender_type import SenderType
+from types.session_state_type import SessionStateType
 
 
 class SessionStateHandler:
     @staticmethod
     def get_login_button_state() -> bool:
-        return st.session_state.get("login_button", False)
+        return st.session_state.get(SessionStateType.LOGIN_BUTTON_STATE.value, False)
 
     @staticmethod
     def set_login_button_state(is_active: bool) -> None:
-        setattr(st.session_state, "login_button", is_active)
+        setattr(st.session_state, SessionStateType.LOGIN_BUTTON_STATE.value, is_active)
 
     @staticmethod
     def get_login_message() -> str:
-        return st.session_state.get("login_message", None)
+        return st.session_state.get(SessionStateType.LOGIN_MESSAGE.value, None)
 
     @staticmethod
     def set_login_message(message: Optional[str]) -> None:
-        setattr(st.session_state, "login_message", message)
+        setattr(st.session_state, SessionStateType.LOGIN_MESSAGE.value, message)
 
     @staticmethod
-    def get_token_varified_count() -> int:
-        return st.session_state.get("token_varified", 0)
+    def get_token_verified_count() -> int:
+        return st.session_state.get(SessionStateType.TOKEN_VERIFIED_COUNT.value, 0)
 
     @staticmethod
-    def add_token_varified_count() -> None:
+    def add_token_verified_count() -> None:
         try:
-            st.session_state["token_varified"] += 1
+            st.session_state[SessionStateType.TOKEN_VERIFIED_COUNT.value] += 1
         except (AttributeError, KeyError):
-            setattr(st.session_state, "token_varified", 1)
+            setattr(st.session_state, SessionStateType.TOKEN_VERIFIED_COUNT.value, 1)
 
     @staticmethod
     def get_token_accepted() -> bool:
-        return st.session_state.get("token_accepted", False)
+        return st.session_state.get(SessionStateType.TOKEN_ACCEPTED_STATE.value, False)
 
     @staticmethod
     def set_token_accepted(is_token_accepted: bool) -> None:
-        setattr(st.session_state, "token_accepted", is_token_accepted)
+        setattr(st.session_state, SessionStateType.TOKEN_ACCEPTED_STATE.value, is_token_accepted)
 
     @staticmethod
     def get_chat_history() -> List[Dict[str, str]]:
-        return st.session_state.get("chat_history", [])
+        return st.session_state.get(SessionStateType.CHAT_HISTORY.value, [])
 
     @staticmethod
     def set_chat_history(sender_type: SenderType, content: str) -> None:
         chat_dict = {"role": sender_type.value, "content": content}
         try:
-            st.session_state["chat_history"].append(chat_dict)
+            st.session_state[SessionStateType.CHAT_HISTORY.value].append(chat_dict)
         except (AttributeError, KeyError):
-            setattr(st.session_state, "chat_history", [chat_dict])
+            setattr(st.session_state, SessionStateType.CHAT_HISTORY.value, [chat_dict])
 
     @staticmethod
     def get_chat_model_index() -> int:
-        return st.session_state.get("model_index", 0)
+        return st.session_state.get(SessionStateType.CHAT_MODEL_INDEX.value, 0)
 
     @staticmethod
     def set_chat_model_index(model_index: int) -> None:
-        setattr(st.session_state, "model_index", model_index)
-    
+        setattr(st.session_state, SessionStateType.CHAT_MODEL_INDEX.value, model_index)
