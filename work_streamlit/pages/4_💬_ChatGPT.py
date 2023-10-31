@@ -43,14 +43,15 @@ if not selected_model:
 
 else:
     model_type = ChatGptType.from_value(value=selected_model)
-
+    model_index = ChatGptType.to_index(value=selected_model)
+    
     # delete chat history if model changed
-    if SessionStateHandler.get_chat_model_index() != ChatGptType.to_index(value=selected_model):
+    if SessionStateHandler.get_chat_model_index() != model_index:
+        SessionStateHandler.set_chat_model_index(model_index=model_index)
         SessionStateHandler.reset_chat_history()
+        st.rerun()
 
     # display chat history
-    SessionStateHandler.set_chat_model_index(model_index=ChatGptType.to_index(value=selected_model))
-
     st.write("### Chat History")
     for chat in SessionStateHandler.get_chat_history():
         if chat["role"] == SenderType.USER.value:
