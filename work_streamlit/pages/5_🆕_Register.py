@@ -52,7 +52,7 @@ def display_register_form():
             else:    
                 st.rerun()
     if SessionStateHandler.get_token_accepted():
-        st.snow()
+        st.balloons()
         display_register_success_content()
 
 
