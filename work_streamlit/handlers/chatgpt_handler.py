@@ -9,6 +9,10 @@ from params import OPENAI_APIKEY
 openai.api_key = OPENAI_APIKEY
 
 
+USER_LABEL = "user"
+ASSISTANT_LABEL = "assistant"
+
+
 class ChatGptHandler:
     @staticmethod
     def query_streamly(prompt: str, original_chat_history: List[Dict[str, str]] = [], model: str = "gpt-3.5-turbo") -> Any:
