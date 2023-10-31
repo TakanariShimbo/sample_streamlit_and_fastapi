@@ -7,6 +7,7 @@ import extra_streamlit_components as stx
 from schemas.user_schema import User
 from handlers.session_state_handler import SessionStateHandler
 from handlers.cookie_handler import CookieHandler
+from handlers.jwt_rs256_signature_verifier import JwtRs256SignatureVerifier
 from handlers.response_handler import ResponseHandler
 from handlers.schema_handler import SchemaHandler
 from params import BACKEND_URL
@@ -60,12 +61,7 @@ class LoginHandler:
             return False
 
         # Add Token
-        is_success = self.__cookie_handler.add_token(token=backend_response.contents["authorized_token"])
-        if not is_success:
-            return False
-
-        SessionStateHandler.set_token_accepted(is_token_accepted=True)
-        return True
+        return self.__add_token(token=backend_response.contents["authorized_token"])
     
     def on_click_register_process(self, inputs_dict: Dict[str, Any]) -> bool:
         # Frontend Eealy Return
@@ -79,12 +75,7 @@ class LoginHandler:
             return False
 
         # Add Token
-        is_success = self.__cookie_handler.add_token(token=backend_response.contents["authorized_token"])
-        if not is_success:
-            return False
-
-        SessionStateHandler.set_token_accepted(is_token_accepted=True)
-        return True
+        return self.__add_token(token=backend_response.contents["authorized_token"])
 
     @staticmethod
     def __login_inputs_check(inputs_dict: Dict[str, Any]) -> bool:
@@ -110,12 +101,32 @@ class LoginHandler:
     def on_click_register_finish(self) -> None:
         SessionStateHandler.set_register_button_state(is_active=False)
 
+    def __add_token(self, token: str) -> bool:
+        jwt_payload = JwtRs256SignatureVerifier.verify_jws(jws_str=token)
+        if not jwt_payload:
+            return False
+        if not jwt_payload.exp:
+            return False
+        
+        self.__cookie_handler.set_token(token=token, expires_at=jwt_payload.exp)
+        SessionStateHandler.set_token_value(token=token)
+        SessionStateHandler.set_token_accepted(is_token_accepted=True)
+        return True
+    
     def __verify_token(self) -> bool:
-        is_accepted = self.__cookie_handler.verify_token()
         SessionStateHandler.add_token_verified_count()
-        if is_accepted:
-            SessionStateHandler.set_token_accepted(is_token_accepted=True)
-        return is_accepted
+
+        token = self.__cookie_handler.get_token()
+        if not token:
+            return False
+
+        jwt_payload = JwtRs256SignatureVerifier.verify_jws(jws_str=token)
+        if not jwt_payload:
+            return False
+
+        SessionStateHandler.set_token_value(token=token)
+        SessionStateHandler.set_token_accepted(is_token_accepted=True)
+        return True
 
     @classmethod
     def __send_login_inputs_to_backend(cls, user_name: str, user_password: str, timeout_seconds: int = 10) -> ResponseHandler:

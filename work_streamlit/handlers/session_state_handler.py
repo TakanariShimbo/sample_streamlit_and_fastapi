@@ -52,6 +52,17 @@ class SessionStateHandler:
         setattr(st.session_state, SessionStateType.LOGIN_MESSAGE.value, message)
 
     """
+    TOKEN_VALUE
+    """
+    @staticmethod
+    def get_token_value() -> Optional[str]:
+        return st.session_state.get(SessionStateType.TOKEN_VALUE.value, None)
+
+    @staticmethod
+    def set_token_value(token: Optional[str] = None) -> None:
+        setattr(st.session_state, SessionStateType.TOKEN_VALUE.value, token)
+
+    """
     TOKEN_VERIFIED_COUNT
     """
     @staticmethod

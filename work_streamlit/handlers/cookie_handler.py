@@ -1,6 +1,7 @@
-import extra_streamlit_components as stx
+from datetime import datetime
+from typing import Optional
 
-from handlers.jwt_rs256_signature_verifier import JwtRs256SignatureVerifier
+import extra_streamlit_components as stx
 
 
 COOKIE_KEY = "sample_streamlit_and_fastapi"
@@ -10,26 +11,11 @@ class CookieHandler:
     def __init__(self, cookie_manager: stx.CookieManager) -> None:
         self.__cookie_manager = cookie_manager
         
-    def add_token(self, token: str) -> bool:
-        jwt_payload = JwtRs256SignatureVerifier.verify_jws(jws_str=token)
-        if not jwt_payload:
-            return False
-        if not jwt_payload.exp:
-            return False
-        
-        self.__cookie_manager.set(cookie=COOKIE_KEY, val=token, expires_at=jwt_payload.exp)
-        return True
+    def set_token(self, token: str, expires_at: datetime) -> None:       
+        self.__cookie_manager.set(cookie=COOKIE_KEY, val=token, expires_at=expires_at)
 
-    def verify_token(self) -> bool:
-        token = self.__cookie_manager.get(cookie=COOKIE_KEY)
-        if not token:
-            return False
-
-        jwt_payload = JwtRs256SignatureVerifier.verify_jws(jws_str=token)
-        if not jwt_payload:
-            return False
-
-        return True
+    def get_token(self) -> Optional[str]:
+        return self.__cookie_manager.get(cookie=COOKIE_KEY)
         
     def delete_token(self):
         self.__cookie_manager.delete(cookie=COOKIE_KEY)

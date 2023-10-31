@@ -8,6 +8,7 @@ class SessionStateType(Enum):
     LOGIN_BUTTON_STATE = "login_button_state"
     LOGIN_MESSAGE = "login_message"
     
+    TOKEN_VALUE = "token_value"
     TOKEN_VERIFIED_COUNT = "token_verified_count"
     TOKEN_ACCEPTED_STATE = "token_accepted_state"
     
