@@ -20,12 +20,12 @@ pip install openai
 # Set Params
 create params.py refering params_sample.py
 
-## Create HS256 Key
+## HS256 Key
 ```
 openssl rand -hex 32
 ```
 
-## Create RS256 Keys
+## RS256 Keys
 * create private key
 ```
 openssl genpkey -algorithm RSA -out private_key.pem
