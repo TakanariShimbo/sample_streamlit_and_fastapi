@@ -22,7 +22,7 @@ def display_already_registered_content():
 def display_register_success_content():
     contents = dedent(
         """
-        ### :blue[Success to register your account]🎉
+        ### :green[Success to register your account]🎉
 
         Thank you for registering.   
         Let's enjoy the Streamlit sample site
