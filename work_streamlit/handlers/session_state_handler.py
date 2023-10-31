@@ -2,6 +2,8 @@ from typing import Optional, List, Dict
 
 import streamlit as st
 
+from handlers.chatgpt_types import SenderType
+
 
 class SessionStateHandler:
     @staticmethod
@@ -44,9 +46,18 @@ class SessionStateHandler:
         return st.session_state.get("chat_history", [])
 
     @staticmethod
-    def set_chat_history(role: str, content: str) -> None:
-        chat_dict = {"role": role, "content": content}
+    def set_chat_history(sender_type: SenderType, content: str) -> None:
+        chat_dict = {"role": sender_type.value, "content": content}
         try:
             st.session_state["chat_history"].append(chat_dict)
         except (AttributeError, KeyError):
             setattr(st.session_state, "chat_history", [chat_dict])
+
+    @staticmethod
+    def get_chat_model_index() -> int:
+        return st.session_state.get("model_index", 0)
+
+    @staticmethod
+    def set_chat_model_index(model_index: int) -> None:
+        setattr(st.session_state, "model_index", model_index)
+    
