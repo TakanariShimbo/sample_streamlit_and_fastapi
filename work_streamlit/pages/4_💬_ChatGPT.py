@@ -1,7 +1,7 @@
 import streamlit as st
 
-from types.sender_type import SenderType
-from types.chatgpt_type import ChatGptType
+from enums.sender_type import SenderType
+from enums.chatgpt_type import ChatGptType
 from handlers.session_state_handler import SessionStateHandler
 from handlers.login_handler import LoginHandler
 from handlers.chatgpt_handler import ChatGptHandler

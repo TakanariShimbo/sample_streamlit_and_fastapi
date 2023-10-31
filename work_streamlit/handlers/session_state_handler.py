@@ -2,8 +2,8 @@ from typing import Optional, List, Dict
 
 import streamlit as st
 
-from types.sender_type import SenderType
-from types.session_state_type import SessionStateType
+from enums.sender_type import SenderType
+from enums.session_state_type import SessionStateType
 
 
 class SessionStateHandler:

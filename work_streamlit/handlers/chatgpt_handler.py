@@ -3,8 +3,8 @@ from typing import Any, Dict, List
 import openai
 from streamlit.delta_generator import DeltaGenerator
 
-from types.sender_type import SenderType
-from types.chatgpt_type import ChatGptType
+from enums.sender_type import SenderType
+from enums.chatgpt_type import ChatGptType
 from params import OPENAI_APIKEY
 
 
