@@ -42,11 +42,11 @@ class LoginHandler:
         self.__cookie_handler.delete_token()        
 
     def on_click_login_start(self) -> None:
-        SessionStateHandler.set_login_button_state(is_active=True)
+        SessionStateHandler.set_login_button_state(is_submitting=True)
         SessionStateHandler.set_login_message(None)
 
     def on_click_register_start(self) -> None:
-        SessionStateHandler.set_register_button_state(is_active=True)
+        SessionStateHandler.set_register_button_state(is_submitting=True)
         SessionStateHandler.set_register_message(None)
 
     def on_click_login_process(self, inputs_dict: Dict[str, Any]) -> bool:
@@ -77,6 +77,12 @@ class LoginHandler:
         # Add Token
         return self.__add_token(token=backend_response.contents["authorized_token"])
 
+    def on_click_login_finish(self) -> None:
+        SessionStateHandler.set_login_button_state(is_submitting=False)
+
+    def on_click_register_finish(self) -> None:
+        SessionStateHandler.set_register_button_state(is_submitting=False)
+
     @staticmethod
     def __login_inputs_check(inputs_dict: Dict[str, Any]) -> bool:
         response_handler = SchemaHandler.create_instance(schema_class=User, kwargs=inputs_dict)
@@ -94,13 +100,7 @@ class LoginHandler:
         else:
             SessionStateHandler.set_register_message(message=response_handler.detail)
             return False
-
-    def on_click_login_finish(self) -> None:
-        SessionStateHandler.set_login_button_state(is_active=False)
-
-    def on_click_register_finish(self) -> None:
-        SessionStateHandler.set_register_button_state(is_active=False)
-
+        
     def __add_token(self, token: str) -> bool:
         jwt_payload = JwtRs256SignatureVerifier.verify_jws(jws_str=token)
         if not jwt_payload:

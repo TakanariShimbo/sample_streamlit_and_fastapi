@@ -15,8 +15,8 @@ class SessionStateHandler:
         return st.session_state.get(SessionStateType.REGISTER_BUTTON_STATE.value, False)
 
     @staticmethod
-    def set_register_button_state(is_active: bool = False) -> None:
-        setattr(st.session_state, SessionStateType.REGISTER_BUTTON_STATE.value, is_active)
+    def set_register_button_state(is_submitting: bool = False) -> None:
+        setattr(st.session_state, SessionStateType.REGISTER_BUTTON_STATE.value, is_submitting)
 
     """
     REGISTER_MESSAGE
@@ -37,8 +37,8 @@ class SessionStateHandler:
         return st.session_state.get(SessionStateType.LOGIN_BUTTON_STATE.value, False)
 
     @staticmethod
-    def set_login_button_state(is_active: bool = False) -> None:
-        setattr(st.session_state, SessionStateType.LOGIN_BUTTON_STATE.value, is_active)
+    def set_login_button_state(is_submitting: bool = False) -> None:
+        setattr(st.session_state, SessionStateType.LOGIN_BUTTON_STATE.value, is_submitting)
 
     """
     LOGIN_MESSAGE
@@ -90,6 +90,17 @@ class SessionStateHandler:
     @staticmethod
     def set_token_accepted(is_token_accepted: bool = False) -> None:
         setattr(st.session_state, SessionStateType.TOKEN_ACCEPTED_STATE.value, is_token_accepted)
+
+    """
+    CHAT_SUBMIT_BUTTON_STATE
+    """
+    @staticmethod
+    def get_chat_submit_button_state() -> bool:
+        return st.session_state.get(SessionStateType.CHAT_SUBMIT_BUTTON_STATE.value, False)
+
+    @staticmethod
+    def set_chat_submit_button_state(is_submitting: bool = False) -> None:
+        setattr(st.session_state, SessionStateType.CHAT_SUBMIT_BUTTON_STATE.value, is_submitting)
 
     """
     CHAT_HISTORY

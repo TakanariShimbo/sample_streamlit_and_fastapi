@@ -11,12 +11,22 @@ from components.not_login_template import NotLoginTemplate
 
 
 st.cache_data
+
+
 def get_avator_logo_dict():
     return {
         ChatGptType.GPT_3_5_TURBO: cv2.imread("images/gpt_3_5_logo.png"),
         ChatGptType.GPT_3_5_TURBO_16K: cv2.imread("images/gpt_3_5_logo.png"),
         ChatGptType.GPT_4: cv2.imread("images/gpt_4_logo.png"),
     }
+
+
+def on_submit_start():
+    SessionStateHandler.set_chat_submit_button_state(is_submitting=True)
+
+
+def on_submit_finish():
+    SessionStateHandler.set_chat_submit_button_state(is_submitting=False)
 
 
 # Set Titles
@@ -44,7 +54,7 @@ if not selected_model:
 else:
     model_type = ChatGptType.from_value(value=selected_model)
     model_index = ChatGptType.to_index(value=selected_model)
-    
+
     # delete chat history if model changed
     if SessionStateHandler.get_chat_model_index() != model_index:
         SessionStateHandler.set_chat_model_index(model_index=model_index)
@@ -61,7 +71,11 @@ else:
             with st.chat_message(name=model_type.value, avatar=get_avator_logo_dict()[model_type]):
                 st.write(chat["content"])
 
-    prompt = st.chat_input(placeholder="Input prompt ...")
+    prompt = st.chat_input(
+        placeholder="Input prompt ...",
+        on_submit=on_submit_start,
+        disabled=SessionStateHandler.get_chat_submit_button_state(),
+    )
     if prompt:
         with st.chat_message(name=SenderType.USER.value):
             st.write(prompt)
@@ -77,3 +91,5 @@ else:
 
         SessionStateHandler.set_chat_history(sender_type=SenderType.USER, content=prompt)
         SessionStateHandler.set_chat_history(sender_type=SenderType.ASSISTANT, content=answer)
+        on_submit_finish()
+        st.rerun()

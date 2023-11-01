@@ -12,5 +12,6 @@ class SessionStateType(Enum):
     TOKEN_VERIFIED_COUNT = "token_verified_count"
     TOKEN_ACCEPTED_STATE = "token_accepted_state"
     
+    CHAT_SUBMIT_BUTTON_STATE = "chat_submit_button_state"
     CHAT_HISTORY = "chat_history"
     CHAT_MODEL_INDEX = "chat_model_index"
