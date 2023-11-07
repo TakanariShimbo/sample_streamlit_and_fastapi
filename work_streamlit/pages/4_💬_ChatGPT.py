@@ -16,6 +16,7 @@ def get_avator_logo_dict():
         ChatGptType.GPT_3_5_TURBO: cv2.imread("images/gpt_3_5_logo.png"),
         ChatGptType.GPT_3_5_TURBO_16K: cv2.imread("images/gpt_3_5_logo.png"),
         ChatGptType.GPT_4: cv2.imread("images/gpt_4_logo.png"),
+        ChatGptType.GPT_4_1106_PREVIEW: cv2.imread("images/gpt_4_logo.png"),
     }
 
 def on_submit_start():
@@ -80,7 +81,7 @@ else:
             answer_area = st.empty()
             answer = ChatGptHandler.query_and_display_answer_streamly(
                 prompt=prompt,
-                answer_area=answer_area,
+                display_func=answer_area.write,
                 original_chat_history=SessionStateHandler.get_chat_history(),
                 model_type=model_type,
             )
