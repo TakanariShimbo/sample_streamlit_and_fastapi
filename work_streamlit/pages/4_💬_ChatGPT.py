@@ -10,9 +10,7 @@ from components.title_template import TitleTemplate
 from components.not_login_template import NotLoginTemplate
 
 
-st.cache_data
-
-
+@st.cache_resource
 def get_avator_logo_dict():
     return {
         ChatGptType.GPT_3_5_TURBO: cv2.imread("images/gpt_3_5_logo.png"),
@@ -20,10 +18,8 @@ def get_avator_logo_dict():
         ChatGptType.GPT_4: cv2.imread("images/gpt_4_logo.png"),
     }
 
-
 def on_submit_start():
     SessionStateHandler.set_chat_submit_button_state(is_submitting=True)
-
 
 def on_submit_finish():
     SessionStateHandler.set_chat_submit_button_state(is_submitting=False)
