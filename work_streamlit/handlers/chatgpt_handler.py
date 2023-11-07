@@ -1,7 +1,6 @@
 from typing import Any, Dict, List, Callable
 
 from openai import OpenAI
-from streamlit.delta_generator import DeltaGenerator
 
 from enums.sender_type import SenderType
 from enums.chatgpt_type import ChatGptType
